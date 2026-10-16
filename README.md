@@ -4,8 +4,41 @@ This repository contains code for the manuscript "Food Image Nutrition Estimatio
 ![](figures/pipeline.png)
 
 ## Data availability
-This project is based on nutrition images from \hyperlink{https://huggingface.co/datasets/mmathys/food-nutrients}{Nutrition5k} and \hyperlink{https://skynet.ecn.purdue.edu/~coburn6/ACETADA/}{ACETADA}. 
+This project is based on nutrition images from [Nutrition5k](https://huggingface.co/datasets/mmathys/food-nutrients) and [ACETADA](https://skynet.ecn.purdue.edu/~coburn6/ACETADA/).
 
 ## Model access
 This project uses [Qwen3-VL-4B-Instruct](https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct), [Qwen3-VL-8B-Instruct](https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct), [Gemma-3-4B-IT](https://huggingface.co/google/gemma-3-4b-it), and [Gemma-3-12B-IT](https://huggingface.co/google/gemma-3-12b-it) from Hugging Face Hub.
 
+# Installation
+To install the required dependencies, run the following command:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+# Data Preparation
+Expected data structure:
+
+```text
+ACETADA-HF-dataset.csv
+ACETADA/<participant_id>/<before image>
+
+nutrition5k_dataset/
+  metadata/dish_metadata_cafe1.csv
+  dish_ids/splits/rgb_train_ids.txt
+  dish_ids/splits/rgb_test_ids.txt
+  frames_sampled60/camera_A_frame_001.jpeg ...
+
+food-nutrients/metadata.jsonl
+
+FNDDS/
+  2021-2023 FNDDS At A Glance - Foods and Beverages.xlsx
+  2021-2023 FNDDS At A Glance - FNDDS Nutrient Values.xlsx
+  2021-2023 FNDDS At A Glance - Portions and Weights.xlsx
+```
+
+Running following command after preparing the data:
+
+```bash
+python src/prepare_data.py --config src/config.yaml
+```

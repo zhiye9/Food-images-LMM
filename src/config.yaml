@@ -1,0 +1,107 @@
+# Copy to config.yaml and replace the absolute input/model paths.
+# Relative output paths are resolved relative to this YAML file.
+workspace: ./artifacts
+seed: 42
+paths:
+  acetada_csv: /data/ACETADA-HF-dataset.csv
+  acetada_images: /data/ACETADA
+  nutrition5k_metadata: /data/nutrition5k_dataset/metadata/dish_metadata_cafe1.csv
+  nutrition5k_imagery: /data/nutrition5k_dataset/imagery/side_angles
+  nutrition5k_train_ids: /data/nutrition5k_dataset/dish_ids/splits/rgb_train_ids.txt
+  nutrition5k_test_ids: /data/nutrition5k_dataset/dish_ids/splits/rgb_test_ids.txt
+  # The cleaned dish list 
+  nutrition5k_hf_metadata: /data/food-nutrients/metadata.jsonl
+  fndds_dir: /data/FNDDS
+data:
+  image_long_edge: 896
+  jpeg_quality: 90
+  # filter following ingredients from Nutrition5k dataset.
+  nutrition5k_excluded_ingredients:
+    - olive oil
+    - salt
+    - garlic
+    - vinegar
+    - pepper
+    - lemon juice
+    - parsley
+    - mustard
+    - thyme
+    - lime
+    - cilantro
+    - basil
+    - rosemary
+    - chive
+    - chili
+    - soy sauce
+    - cream
+    - vinaigrette
+    - ginger
+    - sour cream
+    - butter
+    - sugar
+    - brown sugar
+    - flour
+    - ketchup
+    - mayonnaise
+    - pesto
+    - salsa
+    - syrup
+    - oregano
+    - croutons
+    - cream cheese
+    - caesar dressing
+    - vegetable oil
+    - white wine
+    - wine
+  # all reproduces a dataset-wide closed-set vocabulary. train avoids using
+  # test food names to construct that vocabulary. Neither is image-only.
+  candidate_scope: all         # all | train
+  # Existing frame_001 is reused. Otherwise this zero-based video frame is
+  # decoded with ffmpeg. This is an explicit new rule, not a historical claim.
+  video_frame_index: 0
+models:
+  qwen3-vl-4b:
+    family: qwen3_vl
+    path: /models/Qwen3-VL-4B-Instruct
+    inference_batch_size: 8
+    train_batch_size: 4
+    gradient_accumulation_steps: 4
+  qwen3-vl-8b:
+    family: qwen3_vl
+    path: /models/Qwen3-VL-8B-Instruct
+    inference_batch_size: 4
+    train_batch_size: 2
+    gradient_accumulation_steps: 8
+  gemma3-4b:
+    family: gemma3
+    path: /models/gemma-3-4b-it
+    inference_batch_size: 8
+    train_batch_size: 4
+    gradient_accumulation_steps: 4
+  gemma3-12b:
+    family: gemma3
+    path: /models/gemma-3-12b-it
+    inference_batch_size: 2
+    train_batch_size: 1
+    gradient_accumulation_steps: 16
+generation:
+  max_new_tokens: 150
+  rag_max_new_tokens: 512
+  min_pixels: 200704
+  max_pixels: 1003520
+training:
+  epochs: 5
+  learning_rate: 0.00005
+  warmup_ratio: 0.05
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  eval_steps: 45
+  early_stopping_patience: 3
+  max_length: 2048
+  balance_datasets: true
+rag:
+  embedding_model: /models/Qwen3-Embedding-0.6B
+  embedding_device: cuda
+  retrieval_k: 10
+  query_expansion: true

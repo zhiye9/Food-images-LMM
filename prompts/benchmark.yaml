@@ -1,0 +1,368 @@
+items_with_true_weights:
+  direct_estimation:
+    template: |
+      You are a professional nutritionist with expertise in food portion estimation and nutritional analysis.
+
+      Task: Given the food image and the list of food items with their measured weights, estimate the total nutritional content of the entire plate.
+
+      FOOD ITEMS AND WEIGHTS:
+      {item_list_with_weights}
+
+      STEP 1 - Cooking Method Identification
+      For each food item listed above, identify its most likely cooking method from the following options: raw, boiled, steamed, stir-fried, deep-fried, baked/roasted, grilled, other.
+      Format:
+      - <item_name>: <cooking_method>
+
+      STEP 2 - Total Nutrition Estimation
+      Based on the identified items, their weights, and cooking methods, estimate the total nutritional content:
+      - Total mass: <number> g
+      - Total calories: <number> kcal
+      - Fat: <number> g
+      - Carbohydrates: <number> g
+      - Protein: <number> g
+
+      Important:
+      - Provide SINGLE numeric values (no ranges)
+      - Consider how the cooking method affects nutrient density
+      - Base your estimates on the given weights
+      - Do NOT add, infer, or assume any food items beyond those listed above
+      - ONLY use the exact items provided in FOOD ITEMS AND WEIGHTS
+    generation_config:
+      max_new_tokens: 500
+
+  itemized_analysis:
+    template: |
+      You are a professional nutritionist with expertise in food portion estimation and nutritional analysis.
+
+      Task: Given the food image and the list of food items with their measured weights, estimate the per-item and total nutritional content.
+
+      FOOD ITEMS AND WEIGHTS:
+      {item_list_with_weights}
+
+      STAGE 1 - Cooking Method Identification
+      For each food item listed above, identify its most likely cooking method from: raw, boiled, steamed, stir-fried, deep-fried, baked/roasted, grilled, other.
+      Format:
+      - <item_name>: <cooking_method>
+
+      STAGE 2 - Per-Item Nutrition Estimation
+      For each item, given its weight and cooking method, estimate nutrition:
+      - <item_name> (<weight> g, <cooking_method>):
+        - Calories: <number> kcal
+        - Fat: <number> g
+        - Carbohydrates: <number> g
+        - Protein: <number> g
+
+      STAGE 3 - Total Nutrition Summary
+      Sum all items:
+      - Total mass: <number> g
+      - Total calories: <number> kcal
+      - Fat: <number> g
+      - Carbohydrates: <number> g
+      - Protein: <number> g
+
+      Important:
+      - Provide SINGLE numeric values (no ranges)
+      - Consider how the cooking method affects nutrient density
+      - Do NOT add, infer, or assume any food items beyond those listed above
+      - ONLY estimate nutrition for the exact items provided in FOOD ITEMS AND WEIGHTS
+    generation_config:
+      max_new_tokens: 1200
+
+items_names_only:
+  direct_estimation:
+    template: |
+      You are a professional nutritionist with expertise in food portion estimation and nutritional analysis.
+
+      Task: Given the food image and the names of the food items present, estimate the total weight and nutritional content of the entire plate.
+
+      FOOD ITEMS PRESENT:
+      {item_names_list}
+
+      STEP 1 - Cooking Method Identification
+      For each food item listed above, identify its most likely cooking method from: raw, boiled, steamed, stir-fried, deep-fried, baked/roasted, grilled, other.
+      Format:
+      - <item_name>: <cooking_method>
+
+      STEP 2 - Total Nutrition Estimation
+      Based on the image, the identified items, and their cooking methods, estimate:
+      - Total mass: <number> g
+      - Total calories: <number> kcal
+      - Fat: <number> g
+      - Carbohydrates: <number> g
+      - Protein: <number> g
+
+      Important:
+      - Provide SINGLE numeric values (no ranges)
+      - Estimate the mass visually from the image
+      - Consider how the cooking method affects nutrient density
+      - Do NOT add, infer, or assume any food items beyond those listed above
+      - ONLY use the exact items provided in FOOD ITEMS PRESENT
+    generation_config:
+      max_new_tokens: 500
+
+  itemized_analysis:
+    template: |
+      You are a professional nutritionist with expertise in food portion estimation and nutritional analysis.
+
+      Task: Given the food image and the names of the food items present, estimate the per-item mass and nutrition, then sum for the total.
+
+      FOOD ITEMS PRESENT:
+      {item_names_list}
+
+      STAGE 1 - Cooking Method Identification
+      For each food item, identify its most likely cooking method from: raw, boiled, steamed, stir-fried, deep-fried, baked/roasted, grilled, other.
+      Format:
+      - <item_name>: <cooking_method>
+
+      STAGE 2 - Per-Item Mass and Nutrition Estimation
+      For each item, estimate its mass from the image and then its nutrition:
+      - <item_name> (<cooking_method>):
+        - Estimated mass: <number> g
+        - Calories: <number> kcal
+        - Fat: <number> g
+        - Carbohydrates: <number> g
+        - Protein: <number> g
+
+      STAGE 3 - Total Nutrition Summary
+      Sum all items:
+      - Total mass: <number> g
+      - Total calories: <number> kcal
+      - Fat: <number> g
+      - Carbohydrates: <number> g
+      - Protein: <number> g
+
+      Important:
+      - Provide SINGLE numeric values (no ranges)
+      - Estimate each item's mass visually from the image
+      - Do NOT add, infer, or assume any food items beyond those listed above
+      - ONLY estimate nutrition for the exact items provided in FOOD ITEMS PRESENT
+    generation_config:
+      max_new_tokens: 1200
+
+total_mass_only:
+  direct_estimation:
+    template: |
+      You are a professional nutritionist with expertise in food portion estimation and nutritional analysis.
+
+      Task: Given the food image and the total mass of all food on the plate, identify the food items and estimate total nutrition.
+
+      TOTAL MASS OF ALL FOOD: {total_mass_g} g
+
+      STEP 1 - Food Item Identification
+      List all visible food items/components in the image:
+      - Item 1: <name>
+      - Item 2: <name>
+      ...
+
+      STEP 2 - Cooking Method Identification
+      For each identified food item, determine the cooking method from: raw, boiled, steamed, stir-fried, deep-fried, baked/roasted, grilled, other.
+      Format:
+      - <item_name>: <cooking_method>
+
+      STEP 3 - Total Nutrition Estimation
+      Based on the identified items, total mass ({total_mass_g} g), and cooking methods, estimate:
+      - Total mass: {total_mass_g} g
+      - Total calories: <number> kcal
+      - Fat: <number> g
+      - Carbohydrates: <number> g
+      - Protein: <number> g
+
+      Important:
+      - Provide SINGLE numeric values (no ranges)
+      - The total mass is given as {total_mass_g} g
+      - Consider how the cooking method affects nutrient density
+    generation_config:
+      max_new_tokens: 500
+
+  itemized_analysis:
+    template: |
+      You are a professional nutritionist with expertise in food portion estimation and nutritional analysis.
+
+      Task: Given the food image and the total mass of all food, identify items, allocate the mass across items, and estimate per-item nutrition.
+
+      TOTAL MASS OF ALL FOOD: {total_mass_g} g
+
+      STAGE 1 - Food Item Identification and Cooking Method
+      List all visible food items and their cooking method from: raw, boiled, steamed, stir-fried, deep-fried, baked/roasted, grilled, other.
+      Format:
+      - <item_name>: <cooking_method>
+
+      STAGE 2 - Mass Allocation
+      Distribute the total mass ({total_mass_g} g) across the identified items. The sum of all item masses should approximately equal {total_mass_g} g.
+      Format:
+      - <item_name>: <number> g
+
+      STAGE 3 - Per-Item Nutrition Estimation
+      For each item, based on its allocated mass and cooking method, estimate nutrition:
+      - <item_name> (<mass> g, <cooking_method>):
+        - Calories: <number> kcal
+        - Fat: <number> g
+        - Carbohydrates: <number> g
+        - Protein: <number> g
+
+      STAGE 4 - Total Nutrition Summary
+      Sum all items:
+      - Total mass: <number> g
+      - Total calories: <number> kcal
+      - Fat: <number> g
+      - Carbohydrates: <number> g
+      - Protein: <number> g
+
+      Important:
+      - Provide SINGLE numeric values (no ranges)
+      - The total mass across all items should sum to approximately {total_mass_g} g
+    generation_config:
+      max_new_tokens: 1200
+
+candidate_items_with_total_mass:
+  direct_estimation:
+    template: |
+      You are a professional nutritionist with expertise in food portion estimation and nutritional analysis.
+
+      Task: Given the food image, a candidate list of possible food items, and the total mass, select which items are present and estimate total nutrition.
+
+      CANDIDATE FOOD ITEMS (select only those actually present in the image):
+      {candidate_items_list}
+
+      TOTAL MASS OF ALL FOOD: {total_mass_g} g
+
+      STEP 1 - Item Selection
+      From the candidate list above, select ONLY the food items that are actually present in the image:
+      - Selected items: [<item1>, <item2>, ...]
+
+      STEP 2 - Cooking Method Identification
+      For each selected item, determine the cooking method from: raw, boiled, steamed, stir-fried, deep-fried, baked/roasted, grilled, other.
+      Format:
+      - <item_name>: <cooking_method>
+
+      STEP 3 - Total Nutrition Estimation
+      Based on the selected items, total mass ({total_mass_g} g), and cooking methods, estimate:
+      - Total mass: {total_mass_g} g
+      - Total calories: <number> kcal
+      - Fat: <number> g
+      - Carbohydrates: <number> g
+      - Protein: <number> g
+
+      Important:
+      - ONLY select items from the candidate list
+      - Provide SINGLE numeric values (no ranges)
+    generation_config:
+      max_new_tokens: 500
+
+  itemized_analysis:
+    template: |
+      You are a professional nutritionist with expertise in food portion estimation and nutritional analysis.
+
+      Task: Given the food image, a candidate list, and total mass, select present items, allocate mass, and estimate per-item nutrition.
+
+      CANDIDATE FOOD ITEMS (select only those actually present in the image):
+      {candidate_items_list}
+
+      TOTAL MASS OF ALL FOOD: {total_mass_g} g
+
+      STAGE 1 - Item Selection and Cooking Method
+      From the candidate list, select items present in the image and identify their cooking method from: raw, boiled, steamed, stir-fried, deep-fried, baked/roasted, grilled, other.
+      Format:
+      - <item_name>: <cooking_method>
+
+      STAGE 2 - Mass Allocation
+      Distribute the total mass ({total_mass_g} g) across the selected items:
+      Format:
+      - <item_name>: <number> g
+
+      STAGE 3 - Per-Item Nutrition Estimation
+      For each selected item, based on allocated mass and cooking method:
+      - <item_name> (<mass> g, <cooking_method>):
+        - Calories: <number> kcal
+        - Fat: <number> g
+        - Carbohydrates: <number> g
+        - Protein: <number> g
+
+      STAGE 4 - Total Nutrition Summary
+      Sum all items:
+      - Total mass: <number> g
+      - Total calories: <number> kcal
+      - Fat: <number> g
+      - Carbohydrates: <number> g
+      - Protein: <number> g
+
+      Important:
+      - ONLY select items from the candidate list
+      - Item masses should sum to approximately {total_mass_g} g
+      - Provide SINGLE numeric values (no ranges)
+    generation_config:
+      max_new_tokens: 1200
+
+candidate_items_names_only:
+  direct_estimation:
+    template: |
+      You are a professional nutritionist with expertise in food portion estimation and nutritional analysis.
+
+      Task: Given the food image and a candidate list of possible food items, select which items are present and estimate total nutrition.
+
+      CANDIDATE FOOD ITEMS (select only those actually present in the image):
+      {candidate_items_list}
+
+      STEP 1 - Item Selection
+      From the candidate list above, select ONLY the food items that are actually present in the image:
+      - Selected items: [<item1>, <item2>, ...]
+
+      STEP 2 - Cooking Method Identification
+      For each selected item, determine the cooking method from: raw, boiled, steamed, stir-fried, deep-fried, baked/roasted, grilled, other.
+      Format:
+      - <item_name>: <cooking_method>
+
+      STEP 3 - Total Nutrition Estimation
+      Based on the selected items and cooking methods, estimate:
+      - Total mass: <number> g
+      - Total calories: <number> kcal
+      - Fat: <number> g
+      - Carbohydrates: <number> g
+      - Protein: <number> g
+
+      Important:
+      - ONLY select items from the candidate list
+      - Provide SINGLE numeric values (no ranges)
+    generation_config:
+      max_new_tokens: 500
+
+  itemized_analysis:
+    template: |
+      You are a professional nutritionist with expertise in food portion estimation and nutritional analysis.
+
+      Task: Given the food image and a candidate list, select present items, estimate per-item mass and nutrition.
+
+      CANDIDATE FOOD ITEMS (select only those actually present in the image):
+      {candidate_items_list}
+
+      STAGE 1 - Item Selection and Cooking Method
+      From the candidate list, select items present in the image and identify their cooking method from: raw, boiled, steamed, stir-fried, deep-fried, baked/roasted, grilled, other.
+      Format:
+      - <item_name>: <cooking_method>
+
+      STAGE 2 - Per-Item Mass and Nutrition Estimation
+      For each selected item, estimate mass and nutrition:
+      - <item_name> (<cooking_method>):
+        - Estimated mass: <number> g
+        - Calories: <number> kcal
+        - Fat: <number> g
+        - Carbohydrates: <number> g
+        - Protein: <number> g
+
+      STAGE 3 - Total Nutrition Summary
+      Sum all items:
+      - Total mass: <number> g
+      - Total calories: <number> kcal
+      - Fat: <number> g
+      - Carbohydrates: <number> g
+      - Protein: <number> g
+
+      Important:
+      - ONLY select items from the candidate list
+      - Provide SINGLE numeric values (no ranges)
+    generation_config:
+      max_new_tokens: 1200
+
+defaults:
+  generation_config:
+    max_new_tokens: 500
